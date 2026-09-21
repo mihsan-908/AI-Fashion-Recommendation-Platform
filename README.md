@@ -62,7 +62,7 @@ The application uses Google Gemini for fashion understanding and recommendations
 ## Project Structure
 
 ```
-AI Fashion Website/
+AI Fashion Recommendation Platform/
 │
 ├── services/
 │   ├── __init__.py
@@ -106,7 +106,7 @@ You also need API credentials for:
 **1. Clone the repository**
 
 ```
-git clone https://github.com/your-username/your-repository.git
+git clone https://github.com/mihsan-908/AI-Fashion-Recommendation-Platform.git
 cd AI-Fashion-Recommendation-Platform
 ```
 
