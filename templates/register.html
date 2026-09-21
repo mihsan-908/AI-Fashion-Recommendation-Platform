@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-80px)] p-6">
+    <div class="content-card w-full max-w-md rounded-3xl p-8 md:p-10 shadow-2xl fade-in">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#ff6b6b]/10 border border-[#ff6b6b]/20 mb-4">
+                <i data-lucide="user-plus" class="w-8 h-8 text-[#ff6b6b]"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">Join AI Fashion</h1>
+            <p class="text-gray-400">Discover your unique style signature.</p>
+        </div>
+
+        <form action="{{ url_for('register') }}" method="POST" class="space-y-5">
+            <div class="space-y-2">
+                <label class="text-xs font-mono uppercase tracking-widest text-[#f5a623] ml-1">Full Name</label>
+                <input type="text" name="name" required placeholder="John Doe"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 outline-none focus:border-[#f5a623]/50 transition-all text-gray-100">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-mono uppercase tracking-widest text-[#f5a623] ml-1">Email</label>
+                <input type="email" name="email" required placeholder="name@example.com"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 outline-none focus:border-[#f5a623]/50 transition-all text-gray-100">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-mono uppercase tracking-widest text-[#f5a623] ml-1">Password</label>
+                <input type="password" name="password" required placeholder="Create a password"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 outline-none focus:border-[#f5a623]/50 transition-all text-gray-100">
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-[#f5a623] to-[#ff6b6b] rounded-xl font-bold text-white shadow-lg hover:shadow-[#f5a623]/30 transition-all transform active:scale-[0.98]">
+                Create Account
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-gray-400 text-sm">
+                Already registered? 
+                <a href="{{ url_for('login') }}" class="text-[#f5a623] font-bold hover:underline underline-offset-4">
+                    Sign In
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

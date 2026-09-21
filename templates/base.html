@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Fashion Recommender</title>
+
+
+    <!-- =====================================================
+         Tailwind
+    ====================================================== -->
+
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+
+    <!-- =====================================================
+         Lucide Icons
+    ====================================================== -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+    <!-- =====================================================
+         Fonts
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         Tailwind Configuration
+    ====================================================== -->
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    fontFamily: {
+
+                        sora: [
+                            "Sora",
+                            "sans-serif"
+                        ],
+
+                        mono: [
+                            "Space Mono",
+                            "monospace"
+                        ]
+
+                    }
+
+                }
+
+            }
+
+        };
+
+    </script>
+
+
+    <!-- =====================================================
+         Global Styles
+    ====================================================== -->
+
+    <style>
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+
+        body {
+            overflow-x: hidden;
+        }
+
+
+        .app-wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* ---------------------------------------------
+           Animated Background
+        ---------------------------------------------- */
+
+        @keyframes gradient-shift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+        }
+
+
+        .animated-bg {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f0f0f 0%,
+                    #1a1410 25%,
+                    #2d1f15 50%,
+                    #1a1410 75%,
+                    #0f0f0f 100%
+                );
+
+            background-size: 400% 400%;
+
+            animation:
+                gradient-shift
+                15s
+                ease
+                infinite;
+
+        }
+
+
+        /* ---------------------------------------------
+           Navigation
+        ---------------------------------------------- */
+
+        .glass-nav {
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.035
+                );
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
+
+            border-bottom:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.06
+                );
+
+        }
+
+
+        .nav-link {
+
+            position: relative;
+
+            transition:
+                all
+                0.3s
+                cubic-bezier(
+                    0.4,
+                    0,
+                    0.2,
+                    1
+                );
+
+        }
+
+
+        .nav-link::after {
+
+            content: "";
+
+            position: absolute;
+
+            bottom: -4px;
+
+            left: 0;
+
+            width: 0;
+
+            height: 2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f5a623,
+                    #ff6b6b
+                );
+
+            transition:
+                width
+                0.3s
+                ease;
+
+            border-radius: 2px;
+
+        }
+
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+
+        .nav-link:hover {
+            color: #f5a623;
+        }
+
+
+        /* ---------------------------------------------
+           Brand
+        ---------------------------------------------- */
+
+        .brand-glow {
+
+            text-shadow:
+                0 0 40px
+                rgba(
+                    245,
+                    166,
+                    35,
+                    0.3
+                );
+
+        }
+
+
+        /* ---------------------------------------------
+           Accent Dot
+        ---------------------------------------------- */
+
+        .accent-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            background:
+                #f5a623;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 12px
+                rgba(
+                    245,
+                    166,
+                    35,
+                    0.6
+                );
+
+        }
+
+
+        /* ---------------------------------------------
+           Fade Animation
+        ---------------------------------------------- */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0);
+            }
+
+        }
+
+
+        .fade-in {
+            animation:
+                fadeIn
+                0.6s
+                ease
+                forwards;
+        }
+
+
+        /* ---------------------------------------------
+           Mobile Navigation
+        ---------------------------------------------- */
+
+        @media (max-width: 640px) {
+
+            .desktop-nav-text {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body
+    class="app-wrapper
+           animated-bg
+           font-sora
+           text-gray-100"
+>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav
+        class="glass-nav
+               sticky
+               top-0
+               z-50"
+    >
+
+        <div
+            class="max-w-6xl
+                   mx-auto
+                   px-4
+                   sm:px-6
+                   py-4
+                   flex
+                   items-center
+                   justify-between"
+        >
+
+
+            <!-- ---------------------------------------------
+                 Brand
+            ---------------------------------------------- -->
+
+            <a
+                href="{{ url_for('home') }}"
+                class="flex
+                       items-center
+                       gap-3
+                       no-underline"
+            >
+
+                <div class="accent-dot"></div>
+
+                <h2
+                    class="text-lg
+                           sm:text-xl
+                           font-bold
+                           tracking-tight
+                           brand-glow
+                           font-mono"
+                >
+                    🧠 AI Fashion Recommender
+                </h2>
+
+            </a>
+
+
+            <!-- ---------------------------------------------
+                 Navigation Links
+            ---------------------------------------------- -->
+
+            <div
+                class="flex
+                       items-center
+                       gap-3
+                       sm:gap-6"
+            >
+
+
+                <!-- Home -->
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="nav-link
+                           text-sm
+                           font-medium
+                           text-gray-300
+                           flex
+                           items-center
+                           gap-1.5"
+                >
+
+                    <i
+                        data-lucide="home"
+                        class="w-4 h-4"
+                    ></i>
+
+                    <span class="desktop-nav-text">
+                        Home
+                    </span>
+
+                </a>
+
+
+                <!-- Chat -->
+
+                <a
+                    href="{{ url_for('chat') }}"
+                    class="nav-link
+                           text-sm
+                           font-medium
+                           text-gray-300
+                           flex
+                           items-center
+                           gap-1.5"
+                >
+
+                    <i
+                        data-lucide="message-circle"
+                        class="w-4 h-4"
+                    ></i>
+
+                    <span class="desktop-nav-text">
+                        Chat
+                    </span>
+
+                </a>
+
+
+                <!-- Saved -->
+
+                {% if current_user.is_authenticated %}
+
+                    <a
+                        href="{{ url_for('saved') }}"
+                        class="nav-link
+                               text-sm
+                               font-medium
+                               text-gray-300
+                               flex
+                               items-center
+                               gap-1.5"
+                    >
+
+                        <i
+                            data-lucide="bookmark"
+                            class="w-4 h-4"
+                        ></i>
+
+                        <span class="desktop-nav-text">
+                            Saved
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+
+                <!-- Authentication -->
+
+                {% if current_user.is_authenticated %}
+
+                    <a
+                        href="{{ url_for('logout') }}"
+                        class="nav-link
+                               text-sm
+                               font-medium
+                               px-3
+                               sm:px-4
+                               py-2
+                               rounded-full
+                               border
+                               border-[#f5a623]/40
+                               text-[#f5a623]
+                               hover:bg-[#f5a623]
+                               hover:text-white
+                               transition-all
+                               duration-300
+                               flex
+                               items-center
+                               gap-1.5"
+                    >
+
+                        <i
+                            data-lucide="log-out"
+                            class="w-4 h-4"
+                        ></i>
+
+                        <span class="desktop-nav-text">
+                            Logout
+                        </span>
+
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('login') }}"
+                        class="nav-link
+                               text-sm
+                               font-medium
+                               px-3
+                               sm:px-4
+                               py-2
+                               rounded-full
+                               border
+                               border-[#f5a623]/40
+                               text-[#f5a623]
+                               hover:bg-[#f5a623]
+                               hover:text-white
+                               transition-all
+                               duration-300
+                               flex
+                               items-center
+                               gap-1.5"
+                    >
+
+                        <i
+                            data-lucide="log-in"
+                            class="w-4 h-4"
+                        ></i>
+
+                        <span class="desktop-nav-text">
+                            Login
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         DYNAMIC CONTENT
+    ====================================================== -->
+
+    <main class="flex-1">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+    <!-- =====================================================
+         ICON INITIALIZATION
+    ====================================================== -->
+
+    <script>
+
+        lucide.createIcons();
+
+    </script>
+
+</body>
+
+</html>
